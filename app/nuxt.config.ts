@@ -1,9 +1,5 @@
 export default defineNuxtConfig({
-  modules: [
-    '@nuxt/eslint'
-  ],
-  eslint: {
-  },
+  modules: ["@nuxt/eslint"],
   devtools: { enabled: true },
   ssr: false,
   imports: {
