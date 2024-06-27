@@ -14,6 +14,7 @@ export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
     public: {
+      resasApiBaseEndPoint: process.env.RESAS_API_BASE_ENDPOINT,
       resasApiKey: process.env.RESAS_API_KEY,
     },
   },
