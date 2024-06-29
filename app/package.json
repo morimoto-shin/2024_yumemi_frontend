@@ -13,8 +13,9 @@
     "format": "prettier . --write"
   },
   "dependencies": {
-    "nuxt": "^3.12.2",
-    "nuxt-highcharts": "^3.1.1"
+    "highcharts": "^11.4.3",
+    "highcharts-vue": "^2.0.1",
+    "nuxt": "^3.12.2"
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.3.13",
