@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
   modules: ["@nuxt/eslint"],
-  css: ["~/assets/scss/main.scss"],
+  css: ["~/assets/styles/main.scss"],
   vite: {
     css: {
       preprocessorOptions: {
@@ -12,7 +12,10 @@ export default defineNuxtConfig({
   },
   devtools: { enabled: true },
   ssr: false,
-  imports: {
-    dirs: ["store"],
+  runtimeConfig: {
+    public: {
+      resasApiBaseEndPoint: process.env.RESAS_API_BASE_ENDPOINT,
+      resasApiKey: process.env.RESAS_API_KEY,
+    },
   },
 });
