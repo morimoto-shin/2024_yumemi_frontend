@@ -1,11 +1,17 @@
-import {
-  type Resas,
-  ResasImpl,
-  type Prefecture,
-  type PopulationData,
-} from "~/model/api/resas";
+import { type Resas, ResasImpl } from "~/model/api/resas";
 
-type Population = {
+export type Prefecture = {
+  prefCode: number;
+  prefName: string;
+};
+
+export type PopulationData = {
+  year: number;
+  value: number;
+  rate: number;
+};
+
+export type Population = {
   boundaryYear: number;
   data: {
     label: string;
@@ -14,8 +20,8 @@ type Population = {
 };
 
 export interface ResasRepository {
-  getPrefectures(): Promise<Prefecture[]>;
-  getPopulation(prefCode: number): Promise<Population>;
+  getPrefectures(): Promise<Prefecture[] | null>;
+  getPopulation(prefCode: number): Promise<Population | null>;
 }
 
 export class ResasRepositoryImpl implements ResasRepository {
@@ -25,13 +31,13 @@ export class ResasRepositoryImpl implements ResasRepository {
     this.resas = new ResasImpl();
   }
 
-  async getPrefectures(): Promise<Prefecture[]> {
-    const { result } = await this.resas.getPrefectures();
-    return result;
+  async getPrefectures(): Promise<Prefecture[] | null> {
+    const res = await this.resas.getPrefectures();
+    return res;
   }
 
-  async getPopulation(prefCode: number): Promise<Population> {
-    const { result } = await this.resas.getPopulation(prefCode);
-    return result;
+  async getPopulation(prefCode: number): Promise<Population | null> {
+    const res = await this.resas.getPopulation(prefCode);
+    return res;
   }
 }

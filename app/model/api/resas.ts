@@ -1,17 +1,6 @@
-export type Prefecture = {
-  prefCode: number;
-  prefName: string;
-};
-
 type GetPrefecturesResult = {
   message: string | null;
-  result: Prefecture[];
-};
-
-export type PopulationData = {
-  year: number;
-  value: number;
-  rate: number;
+  result: { prefCode: number; prefName: string }[];
 };
 
 type GetPopulationResult = {
@@ -20,14 +9,28 @@ type GetPopulationResult = {
     boundaryYear: number;
     data: {
       label: string;
-      data: PopulationData[];
+      data: {
+        year: number;
+        value: number;
+        rate: number;
+      }[];
     }[];
   };
 };
 
+type ResasResponseError =
+  | string
+  | {
+      statusCode?: string;
+      message: string;
+      description?: string;
+    };
+
 export interface Resas {
-  getPrefectures(): Promise<GetPrefecturesResult>;
-  getPopulation(prefCode: number): Promise<GetPopulationResult>;
+  getPrefectures(): Promise<GetPrefecturesResult["result"] | null>;
+  getPopulation(
+    prefCode: number,
+  ): Promise<GetPopulationResult["result"] | null>;
 }
 
 export class ResasImpl implements Resas {
@@ -40,23 +43,61 @@ export class ResasImpl implements Resas {
     this.RESAS_API_BASE_ENDPOINT = runtimeConfig.public.resasApiBaseEndPoint;
   }
 
-  async getPrefectures(): Promise<GetPrefecturesResult> {
-    const { data } = await useFetch(
-      `${this.RESAS_API_BASE_ENDPOINT}/api/v1/prefectures`,
-      {
+  async getPrefectures(): Promise<GetPrefecturesResult["result"] | null> {
+    const attemptGetPrefectures = async (
+      retries: number,
+      delay: number,
+    ): Promise<GetPrefecturesResult["result"] | null> => {
+      const { data } = await useFetch<
+        GetPrefecturesResult | ResasResponseError
+      >(`${this.RESAS_API_BASE_ENDPOINT}/api/v1/prefectures`, {
         headers: { "X-API-KEY": this.RESAS_API_KEY },
-      },
-    );
-    return data.value as GetPrefecturesResult;
+      });
+      if (typeof data.value === "string") return null;
+      else if (data.value?.message) return null;
+      else if (
+        data.value &&
+        Object.keys(data.value).length == 1 &&
+        data.value?.message === "" &&
+        retries > 0
+      ) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return attemptGetPrefectures(retries - 1, delay);
+      }
+      return (data.value as GetPrefecturesResult).result;
+    };
+    return attemptGetPrefectures(3, 500);
   }
-  async getPopulation(prefCode: number): Promise<GetPopulationResult> {
-    const { data } = await useFetch(
-      `${this.RESAS_API_BASE_ENDPOINT}/api/v1/population/composition/perYear`,
-      {
-        params: { prefCode, cityCode: "-" },
-        headers: { "X-API-KEY": this.RESAS_API_KEY },
-      },
-    );
-    return data.value as GetPopulationResult;
+
+  async getPopulation(
+    prefCode: number,
+  ): Promise<GetPopulationResult["result"] | null> {
+    const attemptGetPopulation = async (
+      retries: number,
+      delay: number,
+    ): Promise<GetPopulationResult["result"] | null> => {
+      const { data } = await useFetch<GetPopulationResult | ResasResponseError>(
+        `${this.RESAS_API_BASE_ENDPOINT}/api/v1/population/composition/perYear`,
+        {
+          params: { prefCode, cityCode: "-" },
+          headers: { "X-API-KEY": this.RESAS_API_KEY },
+        },
+      );
+      if (typeof data.value === "string") {
+        return null;
+      } else if (data.value?.message) {
+        return null;
+      } else if (
+        data.value &&
+        Object.keys(data.value).length == 1 &&
+        retries > 0
+      ) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        return attemptGetPopulation(retries - 1, delay);
+      }
+      return (data.value as GetPopulationResult).result;
+    };
+
+    return attemptGetPopulation(3, 500);
   }
 }
