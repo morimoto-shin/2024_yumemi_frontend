@@ -13,8 +13,10 @@
     "format": "prettier . --write"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.5.1",
+    "highcharts": "^11.4.3",
+    "highcharts-vue": "^2.0.1",
     "nuxt": "^3.12.2",
+    "@pinia/nuxt": "^0.5.1",
     "pinia": "^2.1.7"
   },
   "devDependencies": {
