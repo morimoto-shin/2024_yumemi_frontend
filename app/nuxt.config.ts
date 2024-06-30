@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ["@nuxt/eslint"],
+  modules: ["@nuxt/eslint", "@pinia/nuxt"],
   plugins: ["@/plugins/highcharts"],
   css: ["~/assets/styles/main.scss"],
   vite: {
