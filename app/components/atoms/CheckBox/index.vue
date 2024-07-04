@@ -1,11 +1,12 @@
 <template>
   <div class="checkbox">
     <input
+      :id="label"
       type="checkbox"
       :checked="modelValue"
-      @change="updateValue($event)"
+      @input="updateValue($event)"
     >
-    <label for="checkbox">{{ label }}</label>
+    <label class="checkbox-label" :for="label">{{ label }}</label>
   </div>
 </template>
 <script setup lang="ts">
@@ -18,4 +19,8 @@
   const emit = defineEmits<Emit>();
   const { updateValue } = useIndex(emit);
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .checkbox-label {
+    margin-left: 5px;
+  }
+</style>

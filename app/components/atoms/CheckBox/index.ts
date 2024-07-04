@@ -1,11 +1,11 @@
 type Emit = {
-  (e: "update:modelValue", value: boolean): void;
+  (e: "input", value: boolean): void;
 };
 
 const useIndex = (emit: Emit) => {
   const updateValue = (event: Event) => {
     const target = event.target as HTMLInputElement;
-    emit("update:modelValue", target.checked);
+    emit("input", target.checked);
   };
   return {
     updateValue,
