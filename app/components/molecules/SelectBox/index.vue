@@ -1,7 +1,7 @@
 <template>
   <div class="select-wrapper" :style="{ width: width }">
     <div class="select-container" @click="toggleDropdown">
-      <slot name="default" :selected-value="props.modelValue" />
+      <div>{{ props.modelValue }}</div>
       <Icon v-if="isOpen" name="arrow-up">
         <path d="M7 14l5-5 5 5" />
       </Icon>
@@ -44,9 +44,14 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid $primary;
     cursor: pointer;
+    background-color: #fff;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #e6f5ff;
+    }
   }
 
   .select-dropdown {
@@ -54,21 +59,27 @@
     top: 100%;
     left: 0;
     background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid $primary;
+    box-shadow: 0 2px 4px rgba(0, 132, 255, 0.1);
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 4px 0 0;
     z-index: 10;
   }
 
   .select-dropdown li {
     padding: 8px 12px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 132, 255, 0.1);
+    }
   }
 
-  .select-dropdown li:hover {
-    background-color: #f2f2f2;
+  :deep(svg) {
+    width: 20px;
+    height: 20px;
+    stroke: $primary;
   }
 </style>

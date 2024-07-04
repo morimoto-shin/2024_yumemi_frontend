@@ -1,6 +1,6 @@
 <template>
   <div class="chart-wrapper">
-    <highcharts ref="chart" :options="chartOptions" />
+    <highcharts ref="chart" class="chart" :options="chartOptions" />
   </div>
 </template>
 
@@ -14,6 +14,20 @@
 <style lang="scss">
   .chart-wrapper {
     width: 100%;
-    height: 400px;
+  }
+  .chart {
+    height: 250px;
+  }
+
+  @media (min-width: 501px) {
+    .chart {
+      height: 350px;
+    }
+  }
+
+  @media (min-width: 800px) {
+    .chart {
+      height: 400px;
+    }
   }
 </style>
