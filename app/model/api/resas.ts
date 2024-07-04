@@ -76,26 +76,22 @@ export class ResasImpl implements Resas {
       retries: number,
       delay: number,
     ): Promise<GetPopulationResult["result"] | null> => {
-      const { data } = await useFetch<GetPopulationResult | ResasResponseError>(
+      const data = await $fetch<GetPopulationResult | ResasResponseError>(
         `${this.RESAS_API_BASE_ENDPOINT}/api/v1/population/composition/perYear`,
         {
           params: { prefCode, cityCode: "-" },
           headers: { "X-API-KEY": this.RESAS_API_KEY },
         },
       );
-      if (typeof data.value === "string") {
+      if (typeof data === "string") {
         return null;
-      } else if (data.value?.message) {
+      } else if (data?.message) {
         return null;
-      } else if (
-        data.value &&
-        Object.keys(data.value).length == 1 &&
-        retries > 0
-      ) {
+      } else if (data && Object.keys(data).length == 1 && retries > 0) {
         await new Promise((resolve) => setTimeout(resolve, delay));
         return attemptGetPopulation(retries - 1, delay);
       }
-      return (data.value as GetPopulationResult).result;
+      return (data as GetPopulationResult).result;
     };
 
     return attemptGetPopulation(3, 500);
