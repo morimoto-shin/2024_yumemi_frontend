@@ -1,21 +1,20 @@
 import { type Resas, ResasImpl } from "~/model/api/resas";
-import { usePopulationStore } from "~/store/population";
 
 export type Prefecture = {
   prefCode: number;
   prefName: string;
 };
 
-export const populationType = {
-  total: "総人口",
-  yang: "年少人口",
-  workingAge: "生産年齢人口",
-  elderly: "老年人口",
-};
-
+export const populationTypeList = [
+  "総人口",
+  "年少人口",
+  "生産年齢人口",
+  "老年人口",
+];
+export type populationType = (typeof populationTypeList)[number];
 export type PopulationData = { year: number; value: number }[];
 export type Population = {
-  [type in keyof typeof populationType]: PopulationData;
+  [type in populationType]: PopulationData;
 };
 
 export interface ResasRepository {
@@ -25,6 +24,7 @@ export interface ResasRepository {
 
 export class ResasRepositoryImpl implements ResasRepository {
   private readonly resas: Resas;
+
   constructor() {
     this.resas = new ResasImpl();
   }
@@ -35,20 +35,14 @@ export class ResasRepositoryImpl implements ResasRepository {
   }
 
   async getPopulation(prefCode: number): Promise<Population | null> {
-    const populationStore = usePopulationStore();
-    if (populationStore.hasPopulation(prefCode)) {
-      return populationStore.getPopulationListByPrefCode(prefCode)!;
-    } else {
-      const res = await this.resas.getPopulation(prefCode);
-      if (!res) return null;
-      const population = Object.fromEntries(
-        res.data.map((population) => [
-          population.label,
-          population.data.map(({ year, value }) => ({ year, value })),
-        ]),
-      ) as Population;
-      populationStore.setPopulationList(prefCode, population);
-      return population;
-    }
+    const res = await this.resas.getPopulation(prefCode);
+    if (!res) return null;
+    const population = Object.fromEntries(
+      res.data.map((population) => [
+        population.label,
+        population.data.map(({ year, value }) => ({ year, value })),
+      ]),
+    ) as Population;
+    return population;
   }
 }

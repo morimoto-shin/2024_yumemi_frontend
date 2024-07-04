@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <h1>test</h1>
-  </div>
+  <PopulationGraph />
 </template>
-<script setup lang="ts"></script>
-<style lang="scss"></style>
+<script setup lang="ts">
+  import PopulationGraph from "@/components/templates/PopulationGraph/index.vue";
+  useHead({
+    title: "都道府県人口ダッシュボード",
+  });
+</script>
+<style scoped lang="scss"></style>
