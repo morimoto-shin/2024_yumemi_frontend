@@ -22,6 +22,5 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/2024_yumemi_frontend/",
     buildAssetsDir: "/_nuxt/",
-    cdnURL: "https://morimoto-shin.github.io/2024_yumemi_frontend/",
   },
 });
