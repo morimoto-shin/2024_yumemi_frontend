@@ -14,9 +14,13 @@ const useIndex = () => {
   const prefectureList = ref<Prefecture[]>([]);
   const populationList = ref<Map<number, Population>>(new Map());
   const getPrefecture = async () => {
-    const res = await resas.getPrefectures();
-    if (!res) return;
-    prefectureList.value = res.map((pref) => ({ ...pref, selected: false }));
+    try {
+      const res = await resas.getPrefectures();
+      if (!res) throw new Error();
+      prefectureList.value = res.map((pref) => ({ ...pref, selected: false }));
+    } catch {
+      window.alert("都道府県の取得に失敗しました。リロードしてください。");
+    }
   };
   const updatePrefectureSelect = async (value: boolean, prefCode: number) => {
     const index = prefectureList.value.findIndex(
@@ -24,9 +28,13 @@ const useIndex = () => {
     );
     if (value) {
       if (!populationList.value.has(prefCode)) {
-        const res = await resas.getPopulation(prefCode);
-        if (!res) return;
-        populationList.value.set(prefCode, res);
+        try {
+          const res = await resas.getPopulation(prefCode);
+          if (!res) throw new Error();
+          populationList.value.set(prefCode, res);
+        } catch {
+          window.alert(`人口の取得に失敗しました。再度選択してください。`);
+        }
       }
       prefectureList.value[index!] = {
         ...prefectureList.value![index!],
