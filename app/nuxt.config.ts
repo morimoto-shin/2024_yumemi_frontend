@@ -19,4 +19,9 @@ export default defineNuxtConfig({
       resasApiKey: process.env.RESAS_API_KEY,
     },
   },
+  app: {
+    baseURL: "/2024_yumemi_frontend/",
+    buildAssetsDir: "/_nuxt/",
+    cdnURL: "https://morimoto-shin.github.io/2024_yumemi_frontend/",
+  },
 });

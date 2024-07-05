@@ -21,10 +21,12 @@ jobs:
           cd app
           npm install
           export NUXT_APP_CDN_URL=https://morimoto-shin.github.io/
-          npm run build -- --preset github_pages
+          npm run build
+      - name: Copy .nojekyll
+        run: cp .nojekyll .output/public
       - uses: actions/upload-pages-artifact@v1
         with:
-          path: ./app/.output/public
+          path: ./.output/public
 
   deploy:
     needs: build
@@ -37,5 +39,5 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
         id: deployment
+        uses: actions/deploy-pages@v1
