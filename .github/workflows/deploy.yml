@@ -2,8 +2,6 @@ name: Deploy
 
 on:
   push:
-    paths:
-      - "app/**"
     branches:
       - "main"
 
@@ -23,7 +21,7 @@ jobs:
           export NUXT_APP_CDN_URL=https://morimoto-shin.github.io/
           npm run build
       - name: Copy .nojekyll
-        run: cp ../.nojekyll .output/public
+        run: touch .output/public/.nojekyll
       - uses: actions/upload-pages-artifact@v1
         with:
           path: ./.output/public
